@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>Lowpro for jQuery Demo</title>
+
+  <!-- include source files here... -->
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+  
+  <script type="text/javascript" src="src/jquery.lowpro.js"></script>
+
+  <script type="text/javascript">
+
+    var AwesomeBehavior = Behavior.create({
+      initialize: function() {
+        this.element //the bound element
+      },
+
+      onclick: function() {
+        alert('clicked');
+      }
+    });
+    
+
+    var AwesomeDelegator = Behavior.create({
+      onmouseover: $.delegate({
+        '#twitter_trends p': function(element, event) {
+          $(element).css({backgroundColor: '#c0c0c0'});
+        }
+      })
+    });
+
+    Event.addBehavior({
+      'body': AwesomeDelegator,
+
+      '#div1 a:click': function() {
+        $('body').css({backgroundColor: '#'+Math.floor(Math.random()*16777215).toString(16)});
+      },
+
+      '#twitter_trends': function(e) {
+        $.getJSON('http://api.twitter.com/1/trends/current.json?callback=?', function(response) {
+          $('#twitter_trends').append('<div id="trends"></div>');
+          $('#twitter_trends').append('<h3>Currently Trending</h3>');
+          for(var trend in response.trends){
+            $.each(response.trends[trend], function(i, el){
+              $('#twitter_trends').append('<p>' + el.name + '</p>');
+            });
+          }
+        });
+      },
+
+      '#behaviors p': AwesomeBehavior
+    });
+  </script>
+
+  <style type="text/css">
+    body {
+      background-color: #B8B8AF;
+      font-family: Helvetica;
+    }
+    #container {
+      width: 500px;
+      margin: 0 auto;
+    }
+
+    .example {
+      padding: 20px;
+      background: #f1f1f1;
+      margin-bottom: 20px;
+    }
+
+    #twitter_trends p {
+      padding: 3px;
+    }
+  </style>
+
+
+</head>
+<body>
+
+  <div id = "container">
+    <div class="example" id="div1">
+      <h1>Bind Events</h1>
+        <pre>
+        <code>
+          Event.addBehavior({
+            '#div1 a:click': function() {
+              $('body').css({backgroundColor: 
+              '#'+Math.floor(Math.random()*16777215).toString(16)});
+            }
+          });
+      </code>
+      </pre>
+      <a href="#">Click me</a>
+    </div>
+
+    <div class="example" id = "twitter_trends">
+      <h1>Do stuff just because an element exists</h1>
+        <pre>
+        <code>
+          Event.addBehavior({
+            '#twitter_trends': function() {
+              //some code that loads
+              //current trends from twitter
+            }
+          });
+      </code>
+      </pre>
+    </div>
+
+    <div class="example" id="behaviors">
+      <h1>Use behaviors to encapsulate.. behavior</h1>
+
+      <pre>
+        <code>
+          var AwesomeBehavior = Behavior.create({
+            initialize: function() {
+              this.element //the bound element
+            },
+
+            onclick: function() {
+              alert('clicked');
+            }
+          });
+          Event.addBehavior({
+            '#behaviors p': AwesomeBehavior
+          })
+        </code>
+      </pre>
+      <p>I have a behavior</p>
+    </div>
+    
+    <div class="example" id="delegation">
+      <h1>Use delegation to handle elements loaded in later on via ajax</h1>
+
+      <pre>
+        <code>
+          var AwesomeDelegator = Behavior.create({
+            onmouseover: $.delegate({
+              '#twitter_trends p': function(element, event) {
+                $(element).css({backgroundColor: '#c0c0c0'});
+              }
+            })
+          });
+          Event.addBehavior({
+            'body': AwesomeDelegator
+          })
+        </code>
+      </pre>
+    </div>
+    
+  </div>
+
+
+</body>
+</html>
+
