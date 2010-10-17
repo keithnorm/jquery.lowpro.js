@@ -1,10 +1,9 @@
 # Low Pro JQ
 
 Burrowed heavily from Dan Webb's version from:
-GIT: github.com:danwrong/low-pro-for-jquery.git
-Download: http://github.com/danwrong/low-pro-for-jquery/tree/master/src/lowpro.jquery.js?raw=true
+* GIT: [github.com:danwrong/low-pro-for-jquery.git](github.com:danwrong/low-pro-for-jquery.git)
+* Download: [http://github.com/danwrong/low-pro-for-jquery/tree/master/src/lowpro.jquery.js?raw=true](http://github.com/danwrong/low-pro-for-jquery/tree/master/src/lowpro.jquery.js?raw=true)
 
-Check out demo.html for examples.
 
 ## Bind Events
     Event.addBehavior({
@@ -54,3 +53,4 @@ Check out demo.html for examples.
       'body': AwesomeDelegator
     })
     
+Check out demo.html for examples.
