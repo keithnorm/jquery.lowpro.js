@@ -73,10 +73,12 @@ var Behavior = {
             behavior.attach.apply(behaving, initArgs);
           };
         } else {
-          var args = (arguments.length == 2 && arguments[1] instanceof Array) ?
-                      arguments[1] : Array.prototype.slice.call(arguments, 1);
+          // first two args are element and selector
+          var args = (arguments.length == 3 && arguments[2] instanceof Array) ?
+                      arguments[2] : Array.prototype.slice.call(arguments, 2);
 
           this.element = $(arguments[0]);
+          this.selector = arguments[1];
           this.initialize.apply(this, args);
           behaving._bindEvents(this);
           behaving.instances.push(this);
@@ -102,13 +104,14 @@ var Behavior = {
     if (!behavior.prototype.initialize)
       behavior.prototype.initialize = function(){};
 
+
     behavior.prototype.constructor = behavior;
     return behavior;
   },
 
   ClassMethods : {
-    attach : function(element) {
-      return new this(element, Array.prototype.slice.call(arguments, 1));
+    attach : function(element, selector) {
+      return new this(element, selector, Array.prototype.slice.call(arguments, 2));
     },
 
     _bindEvents : function(instance) {
@@ -171,8 +174,7 @@ var Behavior = {
 
   var attachBehavior = function(el, behavior, args) {
       if(behavior.attach){
-        instance = behavior.attach(el);
-        instance.element = $(el);
+        instance = behavior.attach(el, args[0].selector);
         if (!behavior.instances) behavior.instances = [];
         behavior.instances.push(instance);
         return instance;
@@ -187,6 +189,18 @@ var Behavior = {
     attach: function() {
       var args = $.makeArray(arguments), behavior = args.shift();
 
+      for (var member in behavior.prototype) {
+        if (member.match(/^on(.+)/) && typeof behavior.prototype[member] == 'function') {
+          $(this.selector).live(RegExp.$1, function(event) {
+            if($(this).attached(behavior) == 0){
+              event.preventDefault();
+              $(this).die(event.type);
+              var instance = new behavior(this);
+              instance['on' + event.type].call(instance, $(this));
+            }
+          })
+        }
+      }
       return this.each(function() {
         attachBehavior(this, behavior, args);
       });
@@ -295,8 +309,9 @@ Event.addBehavior = function(rules) {
         var parts = selector.split(new RegExp(':(' + Event.possibleEvents.join('|') + ')')), css = parts[0], event = parts[1];
         if(event)
           $(css).bind(event, behavior);
-        else
-          $(css).attach(behavior);
+        else {
+          $(css).attach(behavior, {selector: css});
+        }
       });
     };
   });
