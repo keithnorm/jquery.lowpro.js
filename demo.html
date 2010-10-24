@@ -11,13 +11,18 @@
 
   <script type="text/javascript">
 
+    function randomColor() {
+      return Math.floor(Math.random()*16777215).toString(16);
+    }
+
     var AwesomeBehavior = Behavior.create({
       initialize: function() {
         this.element //the bound element
+        this.element.css('color', '#' + randomColor()); 
       },
 
       onclick: function() {
-        alert('clicked');
+        this.element.append($('<span>&#x2714;</span>'));
       }
     });
     
@@ -49,7 +54,15 @@
         });
       },
 
-      '#behaviors p': AwesomeBehavior
+      '#behavior_delegation li': AwesomeBehavior,
+
+      '#behaviors p': AwesomeBehavior,
+
+      '#add_item:click': function() {
+        var newItem = '<li>list item ' + ($('#list li').length + 1).toString() + '</li>';
+        $('#list').append($(newItem)); 
+      }
+      
     });
   </script>
 
@@ -78,76 +91,90 @@
 </head>
 <body>
 
+  <a href="http://github.com/keithnorm/low-pro-for-jquery"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+
   <div id = "container">
     <div class="example" id="div1">
       <h1>Bind Events</h1>
-        <pre>
-        <code>
-          Event.addBehavior({
-            '#div1 a:click': function() {
-              $('body').css({backgroundColor: 
-              '#'+Math.floor(Math.random()*16777215).toString(16)});
-            }
-          });
-      </code>
-      </pre>
+<pre>
+<code>
+  Event.addBehavior({
+    '#div1 a:click': function() {
+      $('body').css({backgroundColor: 
+      '#'+Math.floor(Math.random()*16777215).toString(16)});
+    }
+  });
+</code>
+</pre>
       <a href="#">Click me</a>
     </div>
 
     <div class="example" id = "twitter_trends">
       <h1>Do stuff just because an element exists</h1>
-        <pre>
-        <code>
-          Event.addBehavior({
-            '#twitter_trends': function() {
-              //some code that loads
-              //current trends from twitter
-            }
-          });
-      </code>
-      </pre>
+<pre>
+<code>
+  Event.addBehavior({
+    '#twitter_trends': function() {
+      //some code that loads
+      //current trends from twitter
+    }
+  });
+</code>
+</pre>
     </div>
 
     <div class="example" id="behaviors">
       <h1>Use behaviors to encapsulate.. behavior</h1>
 
-      <pre>
-        <code>
-          var AwesomeBehavior = Behavior.create({
-            initialize: function() {
-              this.element //the bound element
-            },
+<pre>
+<code>
+  var AwesomeBehavior = Behavior.create({
+    initialize: function() {
+      this.element //the bound element
+    },
 
-            onclick: function() {
-              alert('clicked');
-            }
-          });
-          Event.addBehavior({
-            '#behaviors p': AwesomeBehavior
-          })
-        </code>
-      </pre>
+    onclick: function() {
+      this.element.append($('&lt;span&gt;&#x2714;&lt;/span&gt;'));
+    }
+  });
+  Event.addBehavior({
+    '#behaviors p': AwesomeBehavior
+  })
+</code>
+</pre>
       <p>I have a behavior</p>
     </div>
-    
-    <div class="example" id="delegation">
-      <h1>Use delegation to handle elements loaded in later on via ajax</h1>
 
-      <pre>
-        <code>
-          var AwesomeDelegator = Behavior.create({
-            onmouseover: $.delegate({
-              '#twitter_trends p': function(element, event) {
-                $(element).css({backgroundColor: '#c0c0c0'});
-              }
-            })
-          });
-          Event.addBehavior({
-            'body': AwesomeDelegator
-          })
-        </code>
-      </pre>
+    <div class="example" id="behavior_delegation">
+      <h1>Behaviors automagically get bound to elements added at any time</h1>
+<pre>
+<code>
+  var AwesomeBehavior = Behavior.create({
+    initialize: function() {
+      this.element //the bound element
+      this.element.css('color', '#' + randomColor());
+    },
+
+    onclick: function() {
+      this.element.append($('&lt;span&gt;&#x2714;&lt;/span&gt;'));
+    }
+  });
+  Event.addBehavior({
+    '#list li': AwesomeBehavior
+  })
+</code>
+</pre>
+      <ul id="list">
+        <li>list item 1</li>
+        <li>list item 2</li>
+        <li>list item 3</li>
+      </ul>
+
+      <a id="add_item" href="javascript:void(0);">add item</a>
+
+      <p>Note: this only works for behaviors with event methods. That's because it's using jQuery.live to catch any of the bound events on the element and it initializes the behavior when the event is triggered. (the color change on initialize here is meant to demonstrate when the behavior is getting intialized)</p>
     </div>
+    
     
   </div>
 
