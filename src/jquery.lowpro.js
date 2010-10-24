@@ -192,7 +192,7 @@ var Behavior = {
       for (var member in behavior.prototype) {
         if (member.match(/^on(.+)/) && typeof behavior.prototype[member] == 'function') {
           $(this.selector).live(RegExp.$1, function(event) {
-            if($(this).attached(behavior) == 0){
+            if($(this).attached(behavior).length == 0){
               event.preventDefault();
               $(this).die(event.type);
               var instance = new behavior(this);
