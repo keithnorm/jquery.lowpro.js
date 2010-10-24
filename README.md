@@ -6,7 +6,7 @@ Burrowed heavily from Dan Webb's version from:
 
 Checkout the demo at [demo][demo_url]
 
-    [demo_url]: http://keithnorm.github.com/low-pro-for-jquery/
+  [demo_url]: http://keithnorm.github.com/low-pro-for-jquery/
 
 ## Bind Events
     Event.addBehavior({
