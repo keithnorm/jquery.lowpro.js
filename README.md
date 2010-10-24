@@ -4,7 +4,7 @@ Burrowed heavily from Dan Webb's version from:
 * GIT: [github.com:danwrong/low-pro-for-jquery.git](github.com:danwrong/low-pro-for-jquery.git)
 * Download: [http://github.com/danwrong/low-pro-for-jquery/tree/master/src/lowpro.jquery.js?raw=true](http://github.com/danwrong/low-pro-for-jquery/tree/master/src/lowpro.jquery.js?raw=true)
 
-Checkout the demo at [demo][demo_url]
+Checkout the [demo page][demo_url] for some examples.
 
   [demo_url]: http://keithnorm.github.com/low-pro-for-jquery/
 
